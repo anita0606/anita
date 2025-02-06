@@ -1,1 +1,79 @@
+import pygame
+import random
+
+# Инициализация
+pygame.init()
+
+# Экранның өлшемдері
+SCREEN_WIDTH = 400
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Жаңбыр тренажері")
+
+# Түстер
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
+
+# Су деңгейі
+water_level = 0
+max_water_level = SCREEN_HEIGHT
+
+# Жаңбыр тамшысының сипаттамалары
+raindrops = []
+raindrop_speed = 5
+
+# Жаңбыр тамшысының классы
+class Raindrop:
+    def __init__(self):
+        self.x = random.randint(0, SCREEN_WIDTH - 1)
+        self.y = random.randint(-20, SCREEN_HEIGHT - 20)
+        self.speed = random.randint(3, 8)
+        self.width = 2
+        self.height = 10
+
+    def fall(self):
+        self.y += self.speed
+        if self.y > SCREEN_HEIGHT:
+            self.y = random.randint(-20, -1)
+            return True
+        return False
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, BLUE, (self.x, self.y, self.width, self.height))
+
+# Жаңбыр тамшыларын қосу
+for _ in range(200):  # 200 жаңбыр тамшысы
+    raindrops.append(Raindrop())
+
+# Ойынның негізгі циклі
+running = True
+while running:
+    screen.fill(BLACK)
+
+    # Оқиғаларды өңдеу
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    # Жаңбыр тамшыларын құлату
+    for raindrop in raindrops:
+        if raindrop.fall():
+            water_level += 1
+
+    # Жаңбыр тамшыларын экранға шығару
+    for raindrop in raindrops:
+        raindrop.draw(screen)
+
+    # Су деңгейін көрсету (төменгі жағы көк түспен көрсетіледі)
+    pygame.draw.rect(screen, BLUE, (0, SCREEN_HEIGHT - water_level, SCREEN_WIDTH, water_level))
+
+    # Экранды жаңарту
+    pygame.display.flip()
+
+    # FPS
+    pygame.time.Clock().tick(60)
+
+# Pygame кітапханасын жабу
+pygame.quit()
 
