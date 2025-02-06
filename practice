@@ -1,3 +1,4 @@
+#1 есеп
 import pygame
 import random
 
@@ -77,3 +78,78 @@ while running:
 # Pygame кітапханасын жабу
 pygame.quit()
 
+#2есеп
+import pygame
+import random
+import math
+
+# Инициализация
+pygame.init()
+
+# Экран өлшемдері
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Жұлдызды аспан")
+
+# Түстер
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# Жұлдыздар тізімі
+stars = []
+
+# Жұлдыздың сипаттамасы
+class Star:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.radius = random.randint(1, 3)
+        self.max_radius = random.randint(5, 10)
+        self.min_radius = 1
+        self.grow_speed = random.uniform(0.1, 0.2)
+        self.is_growing = True  # жұлдыз кеңейіп немесе кішірейіп жатқанын анықтайды
+
+    def update(self):
+        if self.is_growing:
+            self.radius += self.grow_speed
+            if self.radius >= self.max_radius:
+                self.is_growing = False  # егер максималды радиусқа жетсе, кішірейе бастайды
+        else:
+            self.radius -= self.grow_speed
+            if self.radius <= self.min_radius:
+                self.is_growing = True  # минималды радиусқа жетсе, қайтадан кеңейе бастайды
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, WHITE, (self.x, self.y), int(self.radius))
+
+# Жұлдыздарды генерациялау
+for _ in range(200):  # 200 жұлдыз
+    x = random.randint(0, SCREEN_WIDTH)
+    y = random.randint(0, SCREEN_HEIGHT)
+    star = Star(x, y)
+    stars.append(star)
+
+# Ойынның негізгі циклі
+running = True
+while running:
+    screen.fill(BLACK)  # Экранды тазалау
+
+    # Оқиғаларды өңдеу
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Жұлдыздарды жаңарту және көрсету
+    for star in stars:
+        star.update()
+        star.draw(screen)
+
+    # Экранды жаңарту
+    pygame.display.flip()
+
+    # FPS (кадрлар жиілігі)
+    pygame.time.Clock().tick(60)
+
+# Pygame кітапханасын жабу
+pygame.quit()
